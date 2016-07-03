@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class Objects;
+@class APIObject;
 
 @interface CustomCell : UITableViewCell
 
@@ -20,7 +20,7 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-- (void) submitObject:(Objects*) objects;
+- (void) submitObject:(APIObject*) objects;
 
 @end
 

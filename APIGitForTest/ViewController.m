@@ -8,14 +8,14 @@
 
 #import "ViewController.h"
 #import "ServerManager.h"
-#import "Objects.h"
+#import "APIObject.h"
 #import "CustomCell.h"
 #import "WebViewController.h"
 
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate>
 
 {
-    Objects* object;
+    APIObject* object;
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -49,7 +49,7 @@
             
         } else {
             
-            object = [[Objects alloc]init];
+            object = [[APIObject alloc]init];
             
             [object objectParse:rezultValue];
             
@@ -84,7 +84,7 @@
         
     }
     
-    Objects* obj = object.arrayListObjects[indexPath.row];
+    APIObject* obj = object.arrayListObjects[indexPath.row];
     
     [cell submitObject:obj];
     
@@ -99,7 +99,7 @@
     
     WebViewController *vc = [sb instantiateViewControllerWithIdentifier:@"WebViewController"];
     
-    Objects* obj = object.arrayListObjects[indexPath.row];
+    APIObject* obj = object.arrayListObjects[indexPath.row];
     
     NSString* string = obj.objectURL;
     

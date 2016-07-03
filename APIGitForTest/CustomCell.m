@@ -7,7 +7,7 @@
 //
 
 #import "CustomCell.h"
-#import "Objects.h"
+#import "APIObject.h"
 #import "UIImageView+AFNetworking.h"
 
 @implementation CustomCell
@@ -25,19 +25,47 @@
 
 }
 
-- (void) submitObject:(Objects*) objects {
+- (void) submitObject:(APIObject*) objects {
     
-    [self.activityIndicator startAnimating];
+    
     
    redirectUrl = [NSURL URLWithString:objects.objectURL];
     
-    [self.imageView setImageWithURL:[NSURL URLWithString:objects.objectPhotoURL]
-                   placeholderImage:nil];
+    NSURL* url = [NSURL URLWithString:objects.objectPhotoURL];
+    
+    NSURLRequest* requect = [NSURLRequest requestWithURL:url];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^(void){
+        
+        [self.objectImage setImageWithURLRequest: requect
+                                    placeholderImage:nil
+                                             success:^(NSURLRequest* request,
+                                                       NSHTTPURLResponse* response,
+                                                       UIImage*theImage) {
+                                                 
+                                                 dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                                     
+                                                     self.objectImage.image = theImage;
+                                                     self.activityIndicator.hidden = YES;
+                                                     [self.activityIndicator stopAnimating];
+
+                                                 });
+                                                 
+                                             } failure:^(NSURLRequest* request,
+                                                         NSHTTPURLResponse* response,
+                                                         NSError * error) {
+                                                 
+                                                 dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                                     
+                                                     [self.activityIndicator startAnimating];
+                                                     
+                                                     //NSLog(@"Error photo upload");
+                                                 });
+                                             }];
+    });
     
     [self updateConstraints];
     
-    [self.activityIndicator stopAnimating];
-
     self.nameObjectLable.text = objects.objectName;
     
     self.typeObjectLable.text = objects.objectType;
